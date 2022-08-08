@@ -76,6 +76,17 @@ public class RevenueDTO {
 
     }
 
+    public Revenue update(UUID id, RevenueRepository revenueRepository) {
+        Revenue revenue = revenueRepository.findById(id).get();
+        revenue.setDescription(description);
+        revenue.setValue(value);
+
+        LocalDate localDate = LocalDate.parse(date, formatter);
+        revenue.setDate(localDate);
+
+        return  revenue;
+
+    }
     public Revenue toRevenue(){
         Revenue revenue = new Revenue();
         revenue.setId(id);
@@ -84,6 +95,7 @@ public class RevenueDTO {
         revenue.setDate(LocalDate.parse(date, formatter));
         return revenue;
     }
+
 
     public static List<RevenueDTO> convert(List<Revenue> revenues){
         return revenues.stream().map(RevenueDTO::new).collect(java.util.stream.Collectors.toList());

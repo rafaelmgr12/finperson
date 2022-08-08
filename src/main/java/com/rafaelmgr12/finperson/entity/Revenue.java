@@ -10,6 +10,7 @@ import javax.persistence.*;
 public class Revenue {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(length=16)
     private UUID id;
 
     private String description;
@@ -47,4 +48,5 @@ public class Revenue {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
 }

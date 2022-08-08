@@ -11,4 +11,5 @@ import java.util.UUID;
 @Repository
 public interface RevenueRepository extends CrudRepository<Revenue, UUID> {
     public Optional<Revenue> findByDescriptionAndDateBetween(String description, LocalDate startDate, LocalDate endDate);
+
 }
