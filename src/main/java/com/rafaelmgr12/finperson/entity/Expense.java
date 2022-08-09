@@ -9,6 +9,7 @@ import java.util.UUID;
 public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(length=16)
     private UUID id;
     private String description;
     private Double value;
