@@ -1,5 +1,6 @@
 package com.rafaelmgr12.finperson.dto;
 
+import com.rafaelmgr12.finperson.entity.Category;
 import com.rafaelmgr12.finperson.entity.Expense;
 import com.rafaelmgr12.finperson.repository.ExpenseRepository;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -19,8 +21,10 @@ public class ExpenseDTO {
     private Double value;
     @NotEmpty(message = "Date is required")
     private String date;
-
+    private String category;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+
 
     public ExpenseDTO() {
     }
@@ -30,6 +34,7 @@ public class ExpenseDTO {
         this.description = expense.getDescription();
         this.value = expense.getValue();
         this.date = expense.getDate().format(formatter);
+        this.category = expense.getCategory().getDescription();
     }
 
     public UUID getId() {
@@ -64,6 +69,14 @@ public class ExpenseDTO {
         this.date = date;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public boolean isRepeated(ExpenseRepository expenseRepository){
         LocalDate startDate = LocalDate.parse(date, formatter).with(TemporalAdjusters.lastDayOfMonth());
         LocalDate endDate = LocalDate.parse(date, formatter).with(TemporalAdjusters.firstDayOfNextMonth());
@@ -82,10 +95,24 @@ public class ExpenseDTO {
 
     public Expense toExpense(){
         Expense expense = new Expense();
-        expense.setId(id);
+
         expense.setDescription(description);
         expense.setValue(value);
+
+
         expense.setDate(LocalDate.parse(date, formatter));
+
+        Category inputCategory = Category.OUTROS;
+
+        if (category != null){
+            try {
+                inputCategory = Category.valueOf(category.toUpperCase());
+            }catch (IllegalArgumentException e){
+            }
+        }
+
+        expense.setCategory(inputCategory);
+
         return expense;
     }
 

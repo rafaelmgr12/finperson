@@ -15,6 +15,9 @@ public class Expense {
     private Double value;
     private LocalDate date;
 
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     public UUID getId() {
         return id;
     }
@@ -45,5 +48,13 @@ public class Expense {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

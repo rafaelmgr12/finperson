@@ -89,7 +89,7 @@ public class RevenueDTO {
     }
     public Revenue toRevenue(){
         Revenue revenue = new Revenue();
-        revenue.setId(id);
+
         revenue.setDescription(description);
         revenue.setValue(value);
         revenue.setDate(LocalDate.parse(date, formatter));
