@@ -36,10 +36,23 @@ public class RevenueController {
     }
 
     @GetMapping
-    public List<RevenueDTO> readAll() {
-        List<Revenue> revenues = (List<Revenue>) revenueRepository.findAll();
+    public List<RevenueDTO> readAll(@RequestParam(required = false) String description){
+        List<Revenue> revenues;
+
+        if (description==null){
+            revenues = (List<Revenue>) revenueRepository.findAll();
+        } else {
+            revenues = revenueRepository.findByDescriptionContaining(description);
+        }
+
         return RevenueDTO.convert(revenues);
     }
+
+
+
+
+
+
     @GetMapping("/{id}")
     public ResponseEntity<RevenueDTO> readOne(@PathVariable String id) {
 
@@ -49,6 +62,7 @@ public class RevenueController {
         }
         return ResponseEntity.ok(new RevenueDTO(revenue.get()));
     }
+
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<?> updateRevenue(@PathVariable String id, @Valid @RequestBody RevenueDTO revenueDTO) {
