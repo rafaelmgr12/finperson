@@ -12,5 +12,6 @@ import java.util.UUID;
 @Repository
 public interface ExpenseRepository extends CrudRepository<Expense, UUID> {
     public Optional<Expense> findByDescriptionAndDateBetween(String description, LocalDate startDate, LocalDate endDate);
+    public List<Expense> findByDateBetween(LocalDate startDate, LocalDate endDate);
     public List<Expense> findByDescriptionContaining(String description);
 }

@@ -11,6 +11,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,6 +57,21 @@ public class ExpenseController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(new ExpenseDTO(expense.get()));
+    }
+
+    @GetMapping("/{ano}/{mes}")
+    public ResponseEntity<List<ExpenseDTO>> readByMonth(@PathVariable int ano, @PathVariable int mes){
+       LocalDate startDate;
+       try{
+           startDate = LocalDate.of(ano, mes, 1);
+       } catch (Exception e){
+           return ResponseEntity.badRequest().build();
+       }
+       LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+         List<Expense> expenses = expenseRepository.findByDateBetween(startDate, endDate);
+        return ResponseEntity.ok(ExpenseDTO.convert(expenses));
+
+
     }
 
     @PutMapping("/{id}")

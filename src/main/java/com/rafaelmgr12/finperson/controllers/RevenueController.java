@@ -2,6 +2,7 @@ package com.rafaelmgr12.finperson.controllers;
 
 
 import com.rafaelmgr12.finperson.dto.RevenueDTO;
+import com.rafaelmgr12.finperson.entity.Expense;
 import com.rafaelmgr12.finperson.entity.Revenue;
 import com.rafaelmgr12.finperson.repository.RevenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,11 +51,6 @@ public class RevenueController {
         return RevenueDTO.convert(revenues);
     }
 
-
-
-
-
-
     @GetMapping("/{id}")
     public ResponseEntity<RevenueDTO> readOne(@PathVariable String id) {
 
@@ -62,6 +60,24 @@ public class RevenueController {
         }
         return ResponseEntity.ok(new RevenueDTO(revenue.get()));
     }
+
+    @GetMapping("/{ano}/{mes}")
+    public ResponseEntity<List<RevenueDTO>> readByMonth(@PathVariable int ano, @PathVariable int mes){
+
+        LocalDate startDate;
+
+        try{
+            startDate = LocalDate.of(ano, mes, 1);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+
+        LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+
+        List<Revenue> revenues = revenueRepository.findByDateBetween(startDate, endDate);
+        return ResponseEntity.ok(RevenueDTO.convert(revenues));
+    }
+
 
     @PutMapping("/{id}")
     @Transactional
